@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LK SMART STUDY QUIZ</title>
+    
+    <!-- Google Fonts for Premium Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+           CSS VARIABLES & RESET
+           ========================================================================== */
+        :root {
+            --primary-blue: #1e3a8a; /* Deep Blue */
+            --secondary-blue: #3b82f6; /* Bright Blue */
+            --light-blue: #eff6ff;
+            --white: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --shadow-soft: 0 8px 32px rgba(31, 38, 135, 0.08);
+            --shadow-hover: 0 12px 40px rgba(59, 130, 246, 0.15);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e0f2fe 0%, #ffffff 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* ==========================================================================
+           UTILITIES & GLASSMORPHISM
+           ========================================================================== */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-soft);
+            border-radius: 16px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+            display: inline-block;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            height: 3px;
+            width: 40px;
+            background: var(--secondary-blue);
+            border-radius: 10px;
+        }
+
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* ==========================================================================
+           HEADER
+           ========================================================================== */
+        header {
+            background: var(--primary-blue);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-title {
+            color: var(--white);
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        /* ==========================================================================
+           BANNER SLIDER
+           ========================================================================== */
+        .banner-container {
+            width: 100%;
+            overflow: hidden;
+            border-radius: 16px;
+            margin: 20px 0;
+            position: relative;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .banner-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .banner-slide {
+            min-width: 100%;
+            background: linear-gradient(90deg, var(--primary-blue), var(--secondary-blue));
+            color: var(--white);
+            padding: 40px 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 16px;
+        }
+
+        .banner-slide h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .banner-slide p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* ==========================================================================
+           CARDS (Subjects, Streams, Semesters)
+           ========================================================================== */
+        .card {
+            padding: 24px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border-bottom: 4px solid transparent;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+            border-bottom: 4px solid var(--secondary-blue);
+        }
+
+        .card h3 {
+            color: var(--primary-blue);
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        /* ==========================================================================
+           QUIZ LIST CARDS
+           ========================================================================== */
+        .quiz-card {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            transition: var(--transition);
+        }
+
+        .quiz-card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-3px);
+        }
+
+        .quiz-card-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .quiz-icon {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            flex-shrink: 0;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 12px;
+            padding: 5px;
+        }
+
+        .quiz-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-main);
+            line-height: 1.4;
+        }
+
+        .quiz-actions {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-view {
+            background: linear-gradient(90deg, #1d4ed8, #3b82f6);
+            color: var(--white);
+        }
+
+        .btn-view:hover {
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+            transform: scale(1.02);
+        }
+
+        .btn-download {
+            background: transparent;
+            color: var(--secondary-blue);
+            border: 2px solid var(--secondary-blue);
+        }
+
+        .btn-download:hover {
+            background: var(--light-blue);
+        }
+
+        /* ==========================================================================
+           ADSENSE PLACEHOLDERS
+           ========================================================================== */
+        .ad-placeholder {
+            width: 100%;
+            min-height: 100px;
+            background: repeating-linear-gradient(
+                45deg,
+                #f1f5f9,
+                #f1f5f9 10px,
+                #e2e8f0 10px,
+                #e2e8f0 20px
+            );
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 20px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ==========================================================================
+           UTILITY & NAVIGATION
+           ========================================================================== */
+        main {
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        .view-section {
+            display: none;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--white);
+            border: 1px solid var(--glass-border);
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: var(--text-main);
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+        }
+
+        .page-header {
+            margin-bottom: 20px;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            color: var(--primary-blue);
+            font-weight: 700;
+        }
+
+        /* ==========================================================================
+           FOOTER
+           ========================================================================== */
+        footer {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid var(--glass-border);
+            padding: 30px 20px;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .footer-menu {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            list-style: none;
+            margin-bottom: 15px;
+        }
+
+        .footer-menu a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .footer-menu a:hover {
+            color: var(--secondary-blue);
+        }
+
+        .copyright {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* ==========================================================================
+           MOBILE ADJUSTMENTS
+           ========================================================================== */
+        @media (max-width: 600px) {
+            .grid-cards {
+                grid-template-columns: 1fr;
+            }
+            .banner-slide {
+                padding: 30px 15px;
+            }
+            .banner-slide h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <h1 class="header-title">LK SMART STUDY QUIZ</h1>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <!-- ==========================================
+             VIEW: HOME PAGE
+             ========================================== -->
+        <div id="view-home" class="view-section active">
+            
+            <!-- Banner Section -->
+            <div class="banner-container">
+                <div class="banner-track" id="banner-track">
+                    <div class="banner-slide">
+                        <h2>Welcome to LK Smart Study</h2>
+                        <p>Your Ultimate Platform for Educational Quizzes</p>
+                    </div>
+                    <div class="banner-slide">
+                        <h2>Prepare for Excellence</h2>
+                        <p>Class 10, 11, 12 & Polytechnic Mock Tests</p>
+                    </div>
+                    <div class="banner-slide">
+                        <h2>Test Your Knowledge</h2>
+                        <p>Free MCQ Tests & Downloadable Resources</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ad: Below Banner -->
+            <div class="ad-placeholder">AdSense Placeholder (Below Banner)</div>
+
+            <!-- Bihar Board Class 10 -->
+            <h2 class="section-title">Bihar Board - Class 10</h2>
+            <div class="grid-cards">
+                <div class="card glass" onclick="navTo('subjects', 'Class 10', class10Subjects)">
+                    <h3>All Subjects</h3>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 5px;">Click to view subjects</p>
+                </div>
+            </div>
+
+            <!-- Ad: After Class 10 -->
+            <div class="ad-placeholder">AdSense Placeholder (After Class 10)</div>
+
+            <!-- Bihar Board Class 11 -->
+            <h2 class="section-title">Bihar Board - Class 11</h2>
+            <div class="grid-cards">
+                <div class="card glass" onclick="navTo('subjects', 'Class 11 - Arts', artsSubjects)">
+                    <h3>Arts</h3>
+                </div>
+                <div class="card glass" onclick="navTo('subjects', 'Class 11 - Science (PCM)', scienceSubjects)">
+                    <h3>Science (PCM)</h3>
+                </div>
+            </div>
+
+            <!-- Ad: After Class 11 -->
+            <div class="ad-placeholder">AdSense Placeholder (After Class 11)</div>
+
+            <!-- Bihar Board Class 12 -->
+            <h2 class="section-title">Bihar Board - Class 12</h2>
+            <div class="grid-cards">
+                <div class="card glass" onclick="navTo('subjects', 'Class 12 - Arts', artsSubjects)">
+                    <h3>Arts</h3>
+                </div>
+                <div class="card glass" onclick="navTo('subjects', 'Class 12 - Science (PCM)', scienceSubjects)">
+                    <h3>Science (PCM)</h3>
+                </div>
+            </div>
+
+            <!-- Ad: After Class 12 -->
+            <div class="ad-placeholder">AdSense Placeholder (After Class 12)</div>
+
+            <!-- Polytechnic -->
+            <h2 class="section-title">Polytechnic</h2>
+            <div class="grid-cards" id="polytechnic-container">
+                <!-- Injected via JS -->
+            </div>
+
+            <!-- Ad: After Polytechnic -->
+            <div class="ad-placeholder">AdSense Placeholder (After Polytechnic)</div>
+            
+        </div>
+
+        <!-- ==========================================
+             VIEW: DYNAMIC LIST (Subjects or Branches)
+             ========================================== -->
+        <div id="view-list" class="view-section">
+            <button class="back-btn" onclick="goBack()">
+                <span>&larr;</span> Back
+            </button>
+            <div class="page-header">
+                <h2 class="page-title" id="list-title">Category Name</h2>
+            </div>
+            
+            <div class="grid-cards" id="list-container">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+
+        <!-- ==========================================
+             VIEW: QUIZ LIST PAGE
+             ========================================== -->
+        <div id="view-quiz" class="view-section">
+            <button class="back-btn" onclick="goBack()">
+                <span>&larr;</span> Back
+            </button>
+            <div class="page-header">
+                <h2 class="page-title" id="quiz-page-title">Subject Name - Quizzes</h2>
+            </div>
+
+            <!-- Ad: Before Opening Quiz (Top of Quiz List) -->
+            <div class="ad-placeholder">AdSense Placeholder (Before Quizzes)</div>
+
+            <div class="grid-cards" id="quiz-container">
+                <!-- Dynamically populated -->
+            </div>
+
+            <!-- Ad: After Quiz Ends (Bottom of Quiz List) -->
+            <div class="ad-placeholder">AdSense Placeholder (After Quizzes)</div>
+        </div>
+
+    </main>
+
+    <!-- Global Ad: Above Footer -->
+    <div class="container">
+        <div class="ad-placeholder">AdSense Placeholder (Above Footer)</div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <ul class="footer-menu">
+            <li><a href="about.html">About</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Disclaimer</a></li>
+        </ul>
+        <p class="copyright">&copy; <span id="year"></span> LK SMART STUDY QUIZ. All rights reserved.</p>
+    </footer>
+
+    <!-- ==========================================================================
+         JAVASCRIPT
+         ========================================================================== -->
+    <script>
+        // Set Current Year in Footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // --- Data Definitions ---
+
+        const class10Subjects = [
+            "Hindi", "English", "Mathematics", "Science", 
+            "Social Science", "Sanskrit", "Urdu"
+        ];
+
+        const artsSubjects = [
+            "History", "Geography", "Political Science", 
+            "Economics", "Sociology", "Hindi", "English"
+        ];
+
+        const scienceSubjects = [
+            "Physics", "Chemistry", "Mathematics", 
+            "Biology", "Hindi", "English"
+        ];
+
+        const polytechnicSemesters = [
+            "Semester 1", "Semester 2", "Semester 3", 
+            "Semester 4", "Semester 5", "Semester 6"
+        ];
+
+        const polytechnicBranches = [
+            "Electrical Engineering", "Mechanical Engineering", 
+            "Civil Engineering", "Computer Engineering", 
+            "Electronics Engineering", "Automobile Engineering"
+        ];
+
+        // Placeholder Quiz Data Structure
+        // Website owner will modify these logic flows or array structures later to map to exact real files.
+        const mockQuizzes = [
+            { displayName: "Integration Important MCQ Test", file: "quiz01.html" },
+            { displayName: "Chapter 2 - Objective Questions", file: "quiz02.html" },
+            { displayName: "Previous Year Model Paper 2023", file: "quiz03.html" },
+            { displayName: "Full Mock Test - 50 Questions", file: "quiz04.html" }
+        ];
+
+        // --- Initialization ---
+
+        // Populate Polytechnic Semesters on Home Page
+        const polyContainer = document.getElementById('polytechnic-container');
+        polytechnicSemesters.forEach(sem => {
+            const card = document.createElement('div');
+            card.className = 'card glass';
+            card.innerHTML = `<h3>${sem}</h3>`;
+            card.onclick = () => navTo('branches', `Polytechnic - ${sem}`, polytechnicBranches);
+            polyContainer.appendChild(card);
+        });
+
+        // --- Banner Slider Logic ---
+        const track = document.getElementById('banner-track');
+        const slides = document.querySelectorAll('.banner-slide');
+        let currentSlide = 0;
+
+        setInterval(() => {
+            currentSlide = (currentSlide + 1) % slides.length;
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+        }, 4000); // Auto slide every 4 seconds
+
+        // --- Navigation System ---
+        
+        // Track history for simple "Back" button
+        let viewHistory = ['home']; 
+
+        function hideAllViews() {
+            document.querySelectorAll('.view-section').forEach(el => {
+                el.classList.remove('active');
+            });
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goBack() {
+            if(viewHistory.length > 1) {
+                viewHistory.pop(); // Remove current
+                const previousView = viewHistory[viewHistory.length - 1];
+                hideAllViews();
+                document.getElementById(`view-${previousView}`).classList.add('active');
+                scrollToTop();
+            }
+        }
+
+        // Main Navigation Function
+        function navTo(type, title, dataArray = null) {
+            hideAllViews();
+            scrollToTop();
+            
+            if(type === 'subjects' || type === 'branches') {
+                viewHistory.push('list');
+                document.getElementById('view-list').classList.add('active');
+                document.getElementById('list-title').textContent = title;
+                
+                const container = document.getElementById('list-container');
+                container.innerHTML = '';
+                
+                // Render List Cards
+                dataArray.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'card glass';
+                    card.innerHTML = `<h3>${item}</h3>`;
+                    card.onclick = () => navTo('quizzes', `${title} - ${item}`);
+                    container.appendChild(card);
+                });
+            }
+            else if (type === 'quizzes') {
+                viewHistory.push('quiz');
+                document.getElementById('view-quiz').classList.add('active');
+                document.getElementById('quiz-page-title').textContent = title;
+                
+                const container = document.getElementById('quiz-container');
+                container.innerHTML = '';
+
+                // Fallback inline SVG for the quiz icon if 'Test.png' is missing locally.
+                const fallbackIcon = "data:image/svg+xml;utf8,<svg viewBox='0 0 24 24' width='40' height='40' xmlns='http://www.w3.org/2000/svg' fill='%233b82f6'><path d='M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z'/></svg>";
+
+                // Render Quiz Cards
+                mockQuizzes.forEach((quiz, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'quiz-card glass';
+                    
+                    card.innerHTML = `
+                        <div class="quiz-card-content">
+                            <!-- Website owner requested Test.png, kept transparency logic and included fallback -->
+                            <img src="Test.png" alt="Quiz" class="quiz-icon" onerror="this.src='${fallbackIcon}'">
+                            <h3 class="quiz-title">${quiz.displayName}</h3>
+                        </div>
+                        <div class="quiz-actions">
+                            <a href="${quiz.file}" class="btn btn-view">VIEW</a>
+                            <a href="${quiz.file}" download class="btn btn-download">DOWNLOAD</a>
+                        </div>
+                    `;
+                    
+                    container.appendChild(card);
+
+                    // Insert Ad between cards (skip after the last card)
+                    if(index < mockQuizzes.length - 1) {
+                        const adSpace = document.createElement('div');
+                        adSpace.className = 'ad-placeholder';
+                        adSpace.style.minHeight = '60px'; // Slightly smaller ad between lists
+                        adSpace.textContent = 'AdSense Placeholder (Between Cards)';
+                        container.appendChild(adSpace);
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>
